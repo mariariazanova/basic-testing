@@ -2,8 +2,6 @@ import { simpleCalculator, Action } from './index';
 
 const baseInputMock = { a: 4, b: 2, action: undefined };
 
-jest.setTimeout(3);
-
 describe('simpleCalculator tests', () => {
   test('should add two numbers', () => {
     const inputMock = { ...baseInputMock, action: Action.Add };
