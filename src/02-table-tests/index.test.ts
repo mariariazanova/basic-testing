@@ -17,13 +17,107 @@ const testCases = [
   { a: true, b: 2, action: Action.Add, expected: null },
 ];
 
-describe('simpleCalculator', () => {
-  test.each(testCases)(
-    'should calculate $a $action $b to equal $expected',
-    ({ a, b, action, expected }) => {
-      const result = simpleCalculator({ a, b, action });
+const appropriateTestCases = (
+  action: string,
+): {
+  a: number | string | boolean;
+  b: number;
+  action: string;
+  expected: number | null;
+}[] => {
+  return filterTestCases(action);
+};
 
-      expect(result).toBe(expected);
+const appropriateInvalidTestCases = (
+  action: string,
+): {
+  a: number | string | boolean;
+  b: number;
+  action: string;
+  expected: number | null;
+}[] => {
+  return filterTestCases(action, false);
+};
+
+const filterTestCases = (
+  action: string,
+  validCase = true,
+): {
+  a: number | string | boolean;
+  b: number;
+  action: string;
+  expected: number | null;
+}[] => {
+  return testCases.filter((testCase) =>
+    testCase.action === action && validCase
+      ? testCase.expected
+      : !testCase.expected,
+  );
+};
+
+const testData = ({
+  a,
+  b,
+  action,
+  expected,
+}: {
+  a: number | string | boolean;
+  b: number;
+  action: string;
+  expected: number | null;
+}): void => {
+  const result = simpleCalculator({ a, b, action });
+
+  expect(result).toBe(expected);
+};
+
+describe('simpleCalculator', () => {
+  test.each(appropriateTestCases(Action.Add))(
+    'should add two numbers',
+    (testCase) => {
+      testData(testCase);
+    },
+  );
+
+  test.each(appropriateTestCases(Action.Subtract))(
+    'should subtract two numbers',
+    (testCase) => {
+      testData(testCase);
+    },
+  );
+
+  test.each(appropriateTestCases(Action.Multiply))(
+    'should multiply two numbers',
+    (testCase) => {
+      testData(testCase);
+    },
+  );
+
+  test.each(appropriateTestCases(Action.Divide))(
+    'should divide two numbers',
+    (testCase) => {
+      testData(testCase);
+    },
+  );
+
+  test.each(appropriateTestCases(Action.Exponentiate))(
+    'should exponentiate two numbers',
+    (testCase) => {
+      testData(testCase);
+    },
+  );
+
+  test.each(appropriateTestCases('invalid action'))(
+    'should return null for invalid action',
+    (testCase) => {
+      testData(testCase);
+    },
+  );
+
+  test.each(appropriateInvalidTestCases(Action.Add))(
+    'should return null for invalid arguments',
+    (testCase) => {
+      testData(testCase);
     },
   );
 });
